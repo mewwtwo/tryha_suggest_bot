@@ -25,18 +25,15 @@ async def command_start_handler(message: Message) -> None:
 
 @dp.message()
 async def echo_handler(message: Message) -> None:
-    if message.from_user.id in banned_users:
-        await message.reply("You are banned from sending messages.")
-    else:
-        try:
-            for group_id in admin_id:
-                await bot.forward_message(chat_id=group_id, from_chat_id=message.chat.id, message_id=message.message_id)
-                #await bot.send_message(chat_id=group_id, text=f"author: @{message.from_user.username}" "\nID = " f"{message.from_user.id}")
-                await bot.send_message(chat_id=group_id, text=f"author: @{message.from_user.username}")
-            await message.reply("Ваше повідомлення було надіслано адміністраторам ❤️", parse_mode='Markdown')
-    
-        except TypeError:
-            await message.answer("Помилка")    
+    try:
+        for group_id in admin_id:
+            await bot.forward_message(chat_id=group_id, from_chat_id=message.chat.id, message_id=message.message_id)
+            #await bot.send_message(chat_id=group_id, text=f"author: @{message.from_user.username}" "\nID = " f"{message.from_user.id}")
+            await bot.send_message(chat_id=group_id, text=f"author: @{message.from_user.username}")
+        await message.reply("Ваше повідомлення було надіслано адміністраторам ❤️", parse_mode='Markdown')
+
+    except TypeError:
+        await message.answer("Помилка")    
 
 async def main() -> None:
     bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
